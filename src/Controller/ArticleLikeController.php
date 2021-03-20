@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 
+use App\Entity\Article;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,18 +15,20 @@ class ArticleLikeController extends AbstractController
     /**
      * @param $id
      * @param $type
-     * @Route("articles/{id<\d+>}/like/{type<like|dislike>}", methods={"POST"}, name="app_article_like")
+     * @Route("articles/{slug}/like/{type<like|dislike>}", methods={"POST"}, name="app_article_like")
      */
-    public function like($id, $type, LoggerInterface $logger)
+    public function like(Article $article, $type, LoggerInterface $logger, EntityManagerInterface $em)
     {
         if ($type == 'like') {
-            $likes = rand(121, 200);
+            $article->like();
             $logger->info('лайк');
         } else {
-            $likes = rand(0, 119);
+            $article->dislake();
             $logger->info('дизлайк');
         }
 
-        return $this->json(['likes' => $likes]);
+        $em->flush();
+
+        return $this->json(['likes' => $article->getLikeCount()]);
     }
 }
