@@ -4,7 +4,6 @@
 namespace App\Controller;
 
 
-use App\Service\MarkdownParser;
 use App\Service\SlackClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,17 +13,15 @@ class ArticleController extends AbstractController
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage($slackUrl)
+    public function homepage()
     {
-        dd($slackUrl);
-
         return $this->render('articles/homepage.html.twig');
     }
 
     /**
      * @Route("/articles/{slug}", name="app_article_show")
      */
-    public function show($slug, MarkdownParser $markdownParser, SlackClient $slackClient)
+    public function show($slug, SlackClient $slackClient)
     {
         if ($slug == 'slack') {
             $slackClient->send('Привет, это важное уведомление!');
@@ -60,16 +57,6 @@ maecenas. Turpis cursus in hac habitasse platea. Etiam erat velit scelerisque in
 neque vitae tempus quam pellentesque nec nam aliquam. Odio pellentesque diam volutpat commodo
 sed egestas egestas. Egestas dui id ornare arcu odio ut.
 EOF;
-
-// Кеширование по стандарту PSR-6
-//        $item = $cache->getItem('markdown_' . md5($articleContent));
-//        if (! $item->isHit()) {
-//            $item->set($parsedown->text($articleContent));
-//            $cache->save($item);
-//        }
-//        $articleContent = $item->get();
-
-        $articleContent = $markdownParser->parse($articleContent);
 
         return $this->render('articles/show.html.twig', [
             'article' => ucwords(str_replace('-', ' ', $slug)),
