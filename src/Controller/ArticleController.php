@@ -33,16 +33,8 @@ class ArticleController extends AbstractController
             $slackClient->send('Привет, это важное уведомление!');
         }
 
-        $comments = [
-          'первый коммент',
-          'второй коммент',
-          'третий коммент'
-        ];
-
         return $this->render('articles/show.html.twig', [
             'article' => $article,
-            'comments' => $comments,
-
         ]);
     }
 }

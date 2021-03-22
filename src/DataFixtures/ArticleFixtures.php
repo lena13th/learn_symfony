@@ -30,7 +30,7 @@ class ArticleFixtures extends BaseFixtures
 
     public function loadData(ObjectManager $manager)
     {
-        $this->createMany(Article::class, 10, function (Article $article) {
+        $this->createMany(Article::class, 10, function (Article $article) use ($manager) {
             $article
                 ->setTitle($this->faker->randomElement(self::$articleTitles))
                 ->setBody('
@@ -45,11 +45,11 @@ do eiusmod tempor incididunt [Сметанка](/) ut labore et dolore magna ali
             $article
                 ->setAuthor($this->faker->randomElement(self::$articleAuthor))
                 ->setLikeCount($this->faker->numberBetween(0, 10))
-                ->setImageFilename($this->faker->randomElement(self::$articleImages));
+                ->setImageFilename($this->faker->randomElement(self::$articleImages))
+            ;
+
         });
 
-
-
-
     }
+
 }
